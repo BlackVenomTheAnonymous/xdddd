@@ -51,6 +51,22 @@ def price(update: Update, context: CallbackContext):
 def price(update: Update, context: CallbackContext):
     token_data = get_token_data()
 
+    import plotly.graph_objects as go
+
+def generate_chart():
+    # Retrieve historical price data
+    # ...
+
+    # Generate chart using Plotly
+    fig = go.Figure(data=go.Scatter(x=dates, y=prices))
+    fig.update_layout(title='Price Chart', xaxis_title='Date', yaxis_title='Price')
+
+    # Save the chart as an image or display it
+    # ...
+
+def price(update: Update, context: CallbackContext):
+    token_data = get_token_data()
+
     if token_data:
         price = token_data["quote"]["2781"]["price"]
         price = "{:.8f}".format(price)  # Format price to 8 decimal places
@@ -65,21 +81,13 @@ def price(update: Update, context: CallbackContext):
         response += f"🚀 All-time High: {all_time_high}\n\n"
         response += "Paragen is a chain agnostic launchpad and incubator native to the BSC network. Its goal is to offer an extremely fair tiered system with guaranteed allocations focused on gaming and metaverse projects. 🎮🌌\n"
 
-        keyboard = [
-            [
-                InlineKeyboardButton("Paragen - 🌐", url="https://t.me/paragenio"),
-                InlineKeyboardButton("Marketing - 💼", url="https://t.me/BullionDOT"),
-                InlineKeyboardButton("Buy - 💰", url="https://pancakeswap.finance/swap?outputCurrency=0x25382fb31e4b22e0ea09cb0761863df5ad97ed72"),
-            ],
-            [
-                InlineKeyboardButton("Website - 🌐", url="https://paragen.io/"),
-                InlineKeyboardButton("Project - 📋", url="https://paragen.io/projects"),
-                InlineKeyboardButton("CoinMarketCap - 💎", url="https://coinmarketcap.com/dexscan/bsc/0x447ff4dd9cee7f751cf3eb253dbb3c227747b31c/"),
-            ]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        generate_chart()  # Generate the chart
 
-        update.message.reply_text(response, parse_mode='HTML', reply_markup=reply_markup)
+        # Send the chart image along with the response
+        with open('chart.png', 'rb') as chart_image:
+            update.message.reply_photo(chart_image)
+        
+        update.message.reply_text(response, parse_mode='HTML')
     else:
         update.message.reply_text("Unable to fetch token data.")
 
