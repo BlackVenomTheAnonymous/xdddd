@@ -56,7 +56,7 @@ def price(update: Update, context: CallbackContext):
         market_cap = token_data["quote"]["2781"]["market_cap"]
         volume_24h = token_data["quote"]["2781"]["volume_24h"]
         total_supply = token_data["total_supply"]
-        all_time_high = token_data["quote"]["2781"]["ath"]
+        all_time_high = token_data["quote"]["2781"].get("ath", "N/A")
 
         response = f"🪙 <b>Token: Paragen</b> 🪙\n"
         response += f"💰 Price: {price}\n"
@@ -68,7 +68,6 @@ def price(update: Update, context: CallbackContext):
         update.message.reply_text(response, parse_mode='HTML')
     else:
         update.message.reply_text("Unable to fetch token data.")
-
 
 def main():
     bot_token = "6229379290:AAFZ5WTSqW-H1jGlpsrsZFQRPS9JITHPsS0"
