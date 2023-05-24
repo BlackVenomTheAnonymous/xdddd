@@ -59,10 +59,10 @@ def price(update: Update, context: CallbackContext):
         all_time_high = token_data["quote"]["2781"].get("ath", "N/A")
 
         response = "🪙 <b>Token: Paragen</b> 🪙\n"
-        response += f"💰 Price: {price}\n"
-        response += f"📊 Volume (24h): {volume_24h}\n"
-        response += f"🌐 Total Supply: {total_supply}\n"
-        response += f"🚀 All-time High: {all_time_high}\n\n"
+        response += f"<b>💰 Price:</b> {price}\n"
+        response += f"<b>📊 Volume (24h)</b>: {volume_24h}\n"
+        response += f"<b>🌐 Total Supply:</b> {total_supply}\n"
+        response += f"<b>🚀 All-time High:</b> {all_time_high}\n\n"
         response += "Paragen is a chain agnostic launchpad and incubator native to the BSC network. Its goal is to offer an extremely fair tiered system with guaranteed allocations focused on gaming and metaverse projects. 🎮🌌\n"
 
         keyboard = [
