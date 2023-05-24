@@ -74,7 +74,7 @@ def price(update: Update, context: CallbackContext):
             [
                 InlineKeyboardButton("Website - 🌐", url="https://paragen.io/"),
                 InlineKeyboardButton("Project - 📋", url="https://paragen.io/projects"),
-                InlineKeyboardButton("CoinMarketCap - 💎", url="https://coinmarketcap.com/dexscan/bsc/0x447ff4dd9cee7f751cf3eb253dbb3c227747b31c/"),
+                InlineKeyboardButton("CMC - 💎", url="https://coinmarketcap.com/dexscan/bsc/0x447ff4dd9cee7f751cf3eb253dbb3c227747b31c/"),
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
