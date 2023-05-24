@@ -36,7 +36,7 @@ def price(update: Update, context: CallbackContext):
     update.message.reply_markdown(response)
 
 def main():
-    bot_token = "6229379290:AAGznjkKOnKqZZI14DDnOIuHT6LaBi9-7Dc"  # Replace with your actual bot token
+    bot_token = "6229379290:AAE4gWi4HrVb4Lh_GMkZy-_-OBMoVniswDI"  # Replace with your actual bot token
     updater = Updater(bot_token)
     dispatcher = updater.dispatcher
 
