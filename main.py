@@ -64,6 +64,19 @@ def generate_chart():
     # Save the chart as an image or display it
     # ...
 
+import plotly.graph_objects as go
+
+def generate_chart():
+    # Retrieve historical price data
+    # ...
+
+    # Generate chart using Plotly
+    fig = go.Figure(data=go.Scatter(x=dates, y=prices))
+    fig.update_layout(title='Price Chart', xaxis_title='Date', yaxis_title='Price')
+
+    # Save the chart as an image or display it
+    # ...
+
 def price(update: Update, context: CallbackContext):
     token_data = get_token_data()
 
@@ -90,6 +103,7 @@ def price(update: Update, context: CallbackContext):
         update.message.reply_text(response, parse_mode='HTML')
     else:
         update.message.reply_text("Unable to fetch token data.")
+
 
 
 def main():
