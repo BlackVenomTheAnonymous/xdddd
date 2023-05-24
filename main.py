@@ -48,7 +48,10 @@ def price(update: Update, context: CallbackContext):
     token_data = get_token_data()
     chart_image_url = get_chart_image_url()
 
-    if token_data and chart_image_url:
+def price(update: Update, context: CallbackContext):
+    token_data = get_token_data()
+
+    if token_data:
         price = token_data["quote"]["2781"]["price"]
         market_cap = token_data["quote"]["2781"]["market_cap"]
         volume_24h = token_data["quote"]["2781"]["volume_24h"]
@@ -62,12 +65,10 @@ def price(update: Update, context: CallbackContext):
         response += f"🌐 Total Supply: {total_supply}\n"
         response += f"🚀 All-time High: {all_time_high}"
 
-        keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("Buy", url="https://pancakeswap.finance/swap?outputCurrency=0x25382fb31e4b22e0ea09cb0761863df5ad97ed72")]
-        ])
-        update.message.reply_photo(chart_image_url, caption=response, reply_markup=keyboard, parse_mode='HTML')
+        update.message.reply_text(response, parse_mode='HTML')
     else:
         update.message.reply_text("Unable to fetch token data.")
+
 
 def main():
     bot_token = "6229379290:AAFZ5WTSqW-H1jGlpsrsZFQRPS9JITHPsS0"
