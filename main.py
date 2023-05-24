@@ -37,7 +37,8 @@ def price(update: Update, context: CallbackContext):
 
 def main():
     bot_token = "6229379290:AAE4gWi4HrVb4Lh_GMkZy-_-OBMoVniswDI"  # Replace with your actual bot token
-    updater = Updater(bot_token)
+        updater = Updater(bot_token, use_context=True)
+
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
@@ -46,5 +47,5 @@ def main():
     updater.start_polling()
     updater.idle()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
