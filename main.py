@@ -53,21 +53,31 @@ def price(update: Update, context: CallbackContext):
 
     if token_data:
         price = token_data["quote"]["2781"]["price"]
-        market_cap = token_data["quote"]["2781"]["market_cap"]
+        price = "{:.8f}".format(price)  # Format price to 8 decimal places
         volume_24h = token_data["quote"]["2781"]["volume_24h"]
         total_supply = token_data["total_supply"]
         all_time_high = token_data["quote"]["2781"].get("ath", "N/A")
 
-        response = f"🪙 <b>Token: Paragen</b> 🪙\n"
+        response = "🪙 <b>Token: Paragen</b> 🪙\n"
         response += f"💰 Price: {price}\n"
-        response += f"💼 Market Cap: {market_cap}\n"
         response += f"📊 Volume (24h): {volume_24h}\n"
         response += f"🌐 Total Supply: {total_supply}\n"
-        response += f"🚀 All-time High: {all_time_high}"
+        response += f"🚀 All-time High: {all_time_high}\n\n"
+        response += "Paragen is a chain agnostic launchpad and incubator native to the BSC network. Its goal is to offer an extremely fair tiered system with guaranteed allocations focused on gaming and metaverse projects. 🎮🌌\n"
 
-        update.message.reply_text(response, parse_mode='HTML')
+        keyboard = [
+            [InlineKeyboardButton("Paragen - 🌐", url="https://t.me/paragenio"),
+             InlineKeyboardButton("Marketing - 💼", url="https://t.me/BullionDOT")],
+            [InlineKeyboardButton("Buy - 💰", url="https://pancakeswap.finance/swap?outputCurrency=0x25382fb31e4b22e0ea09cb0761863df5ad97ed72")],
+            [InlineKeyboardButton("Website - 🌐", url="https://paragen.io/"),
+             InlineKeyboardButton("Project - 📋", url="https://paragen.io/projects")]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        update.message.reply_text(response, parse_mode='HTML', reply_markup=reply_markup)
     else:
         update.message.reply_text("Unable to fetch token data.")
+
 
 def main():
     bot_token = "6229379290:AAFZ5WTSqW-H1jGlpsrsZFQRPS9JITHPsS0"
