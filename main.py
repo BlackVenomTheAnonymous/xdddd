@@ -1,48 +1,48 @@
 import requests
-from bs4 import BeautifulSoup
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackContext
 
-def scrape_paragen_data():
-    url = "https://coinmarketcap.com/currencies/paragen/"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-
-    data_elements = soup.find_all('div', class_='statsValue')
-
-    if len(data_elements) >= 5:
-        price = data_elements[0].text.strip()
-        market_cap = data_elements[1].text.strip()
-        volume_24h = data_elements[2].text.strip()
-        total_supply = data_elements[3].text.strip()
-        fully_diluted_market_cap = data_elements[4].text.strip()
-
-        chart_image_url = soup.find('img', class_='cmc-chart-image').get('src')
-
-        return price, market_cap, volume_24h, total_supply, fully_diluted_market_cap, chart_image_url
+def get_token_data():
+    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+    headers = {
+        "X-CMC_PRO_API_KEY": "0a244b8b-3664-4305-842e-d0a8b8027e4a"
+    }
+    params = {
+        "id": "18450",
+        "convert_id": "2781",
+        "aux": "num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,market_cap_by_total_supply,volume_24h_reported,volume_7d,volume_7d_reported,volume_30d,volume_30d_reported,is_active,is_fiat"
+    }
+    
+    response = requests.get(url, headers=headers, params=params)
+    data = response.json()
+    
+    if response.status_code == 200 and "data" in data:
+        return data["data"]["18450"]
     else:
-        return None, None, None, None, None, None
+        return None
 
 def start(update: Update, context: CallbackContext):
-    update.message.reply_text("Welcome to the Token Price Bot! Use /price to get the Paragen token information.")
+    update.message.reply_text("Welcome to the Token Price Bot! Use /price to get token information.")
 
 def price(update: Update, context: CallbackContext):
-    price, market_cap, volume_24h, total_supply, fully_diluted_market_cap, chart_image_url = scrape_paragen_data()
+    token_data = get_token_data()
 
-    if price and market_cap and volume_24h and total_supply and fully_diluted_market_cap and chart_image_url:
+    if token_data:
+        price = token_data["quote"]["2781"]["price"]
+        market_cap = token_data["quote"]["2781"]["market_cap"]
+        volume_24h = token_data["quote"]["2781"]["volume_24h"]
+
         response = f"🪙 <b>Token: Paragen</b> 🪙\n"
         response += f"💰 Price: {price}\n"
         response += f"💼 Market Cap: {market_cap}\n"
-        response += f"📊 Volume (24h): {volume_24h}\n"
-        response += f"🔢 Total Supply: {total_supply}\n"
-        response += f"🌐 Fully Diluted Market Cap: {fully_diluted_market_cap}"
+        response += f"📊 Volume (24h): {volume_24h}"
 
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("Buy", url="https://pancakeswap.finance/swap?outputCurrency=0x25382fb31e4b22e0ea09cb0761863df5ad97ed72")]
         ])
-        update.message.reply_photo(chart_image_url, caption=response, reply_markup=keyboard, parse_mode='HTML')
+        update.message.reply_text(response, reply_markup=keyboard, parse_mode='HTML')
     else:
-        update.message.reply_text("Unable to fetch Paragen token data from CoinMarketCap.")
+        update.message.reply_text("Unable to fetch token data.")
 
 def main():
     bot_token = "6229379290:AAE4gWi4HrVb4Lh_GMkZy-_-OBMoVniswDI"
