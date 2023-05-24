@@ -1,44 +1,52 @@
+import requests
+from bs4 import BeautifulSoup
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackContext
-from bs4 import BeautifulSoup
-import requests
 
-def start(update: Update, context: CallbackContext):
-    """Handler for the /start command"""
-    update.message.reply_text("Welcome to the Crypto Bot! Use the /price command to get information about Paragen token.")
-
-def price(update: Update, context: CallbackContext):
-    """Handler for the /price command"""
+def scrape_paragen_data():
     url = "https://coinmarketcap.com/currencies/paragen/"
     response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+    soup = BeautifulSoup(response.content, 'html.parser')
 
-    # Extracting the required data
-    price = soup.find(class_="priceValue___11gHJ").text.strip()
-    market_cap = soup.find(text="Market Cap").find_next(class_="statsValue___2iaoZ").text.strip()
-    volume_24h = soup.find(text="Volume (24h)").find_next(class_="statsValue___2iaoZ").text.strip()
-    total_supply = soup.find(text="Total Supply").find_next(class_="statsValue___2iaoZ").text.strip()
-    fully_diluted_market_cap = soup.find(text="Fully Diluted Market Cap").find_next(class_="statsValue___2iaoZ").text.strip()
+    data_elements = soup.find_all('div', class_='statsValue')
 
-    # Building the response
-    response = "PARAGEN Token Information:\n\n"
-    response += "💰 Price: {}\n".format(price)
-    response += "📊 Market Cap: {}\n".format(market_cap)
-    response += "🔄 Volume (24h): {}\n".format(volume_24h)
-    response += "🔢 Total Supply: {}\n".format(total_supply)
-    response += "💼 Fully Diluted Market Cap: {}\n".format(fully_diluted_market_cap)
+    if len(data_elements) >= 5:
+        price = data_elements[0].text.strip()
+        market_cap = data_elements[1].text.strip()
+        volume_24h = data_elements[2].text.strip()
+        total_supply = data_elements[3].text.strip()
+        fully_diluted_market_cap = data_elements[4].text.strip()
 
-    # Adding the inline button
-    button_url = "https://pancakeswap.finance/swap?outputCurrency=0x25382fb31e4b22e0ea09cb0761863df5ad97ed72"
-    response += "\nBuy PARAGEN on PancakeSwap: [Buy]({})".format(button_url)
+        chart_image_url = soup.find('img', class_='cmc-chart-image').get('src')
 
-    # Sending the response to the user
-    update.message.reply_markdown(response)
+        return price, market_cap, volume_24h, total_supply, fully_diluted_market_cap, chart_image_url
+    else:
+        return None, None, None, None, None, None
+
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text("Welcome to the Token Price Bot! Use /price to get the Paragen token information.")
+
+def price(update: Update, context: CallbackContext):
+    price, market_cap, volume_24h, total_supply, fully_diluted_market_cap, chart_image_url = scrape_paragen_data()
+
+    if price and market_cap and volume_24h and total_supply and fully_diluted_market_cap and chart_image_url:
+        response = f"🪙 <b>Token: Paragen</b> 🪙\n"
+        response += f"💰 Price: {price}\n"
+        response += f"💼 Market Cap: {market_cap}\n"
+        response += f"📊 Volume (24h): {volume_24h}\n"
+        response += f"🔢 Total Supply: {total_supply}\n"
+        response += f"🌐 Fully Diluted Market Cap: {fully_diluted_market_cap}"
+
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("Buy", url="https://pancakeswap.finance/swap?outputCurrency=0x25382fb31e4b22e0ea09cb0761863df5ad97ed72")]
+        ])
+        update.message.reply_photo(chart_image_url, caption=response, reply_markup=keyboard, parse_mode='HTML')
+    else:
+        update.message.reply_text("Unable to fetch Paragen token data from CoinMarketCap.")
 
 def main():
-    bot_token = "6229379290:AAE4gWi4HrVb4Lh_GMkZy-_-OBMoVniswDI"  # Replace with your actual bot token
+    bot_token = "6229379290:AAE4gWi4HrVb4Lh_GMkZy-_-OBMoVniswDI"
     updater = Updater(bot_token, use_context=True)
-
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
@@ -47,5 +55,5 @@ def main():
     updater.start_polling()
     updater.idle()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
