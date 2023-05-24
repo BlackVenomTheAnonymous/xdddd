@@ -37,7 +37,7 @@ def price(update: Update, context: CallbackContext):
 
 def main():
     bot_token = "6229379290:AAE4gWi4HrVb4Lh_GMkZy-_-OBMoVniswDI"  # Replace with your actual bot token
-        updater = Updater(bot_token, use_context=True)
+    updater = Updater(bot_token, use_context=True)
 
     dispatcher = updater.dispatcher
 
