@@ -66,11 +66,16 @@ def price(update: Update, context: CallbackContext):
         response += "Paragen is a chain agnostic launchpad and incubator native to the BSC network. Its goal is to offer an extremely fair tiered system with guaranteed allocations focused on gaming and metaverse projects. 🎮🌌\n"
 
         keyboard = [
-            [InlineKeyboardButton("Paragen - 🌐", url="https://t.me/paragenio"),
-             InlineKeyboardButton("Marketing - 💼", url="https://t.me/BullionDOT")],
-            [InlineKeyboardButton("Buy - 💰", url="https://pancakeswap.finance/swap?outputCurrency=0x25382fb31e4b22e0ea09cb0761863df5ad97ed72")],
-            [InlineKeyboardButton("Website - 🌐", url="https://paragen.io/"),
-             InlineKeyboardButton("Project - 📋", url="https://paragen.io/projects")]
+            [
+                InlineKeyboardButton("Paragen - 🌐", url="https://t.me/paragenio"),
+                InlineKeyboardButton("Marketing - 💼", url="https://t.me/BullionDOT"),
+                InlineKeyboardButton("Buy - 💰", url="https://pancakeswap.finance/swap?outputCurrency=0x25382fb31e4b22e0ea09cb0761863df5ad97ed72"),
+            ],
+            [
+                InlineKeyboardButton("Website - 🌐", url="https://paragen.io/"),
+                InlineKeyboardButton("Project - 📋", url="https://paragen.io/projects"),
+                InlineKeyboardButton("CoinMarketCap - 💎", url="https://coinmarketcap.com/dexscan/bsc/0x447ff4dd9cee7f751cf3eb253dbb3c227747b31c/"),
+            ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
